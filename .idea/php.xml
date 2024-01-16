@@ -10,7 +10,12 @@
     <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="tom-lemonnier.bzh" id="0cd948b3-73f1-40d8-9d9c-511958d83dbf" name="Tom-Lemonnier.bzh" />
+    </servers>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
