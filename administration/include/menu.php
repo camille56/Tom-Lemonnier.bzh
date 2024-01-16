@@ -43,14 +43,14 @@ include_once "../include/configuration.php";
 
     function openTab(tabName) {
         // Masquer tous les contenus d'onglets
-        var tabs = document.getElementsByClassName('content');
-        for (var i = 0; i < tabs.length; i++) {
+        let tabs = document.getElementsByClassName('content');
+        for (let i = 0; i < tabs.length; i++) {
             tabs[i].style.display = 'none';
         }
 
-        // Désélectionner toutes les onglets
-        var tabButtons = document.getElementsByClassName('tab');
-        for (var i = 0; i < tabButtons.length; i++) {
+        // Désélectionner tous les onglets
+        let tabButtons = document.getElementsByClassName('tab');
+        for (let i = 0; i < tabButtons.length; i++) {
             tabButtons[i].classList.remove('active');
         }
 
@@ -58,7 +58,7 @@ include_once "../include/configuration.php";
         document.getElementById(tabName).style.display = 'block';
 
         // Sélectionner l'onglet actuel
-        var currentTabButton = document.querySelector('.tab[onclick="openTab(\'' + tabName + '\')"]');
+        let currentTabButton = document.querySelector('.tab[onclick="openTab(\'' + tabName + '\')"]');
         if (currentTabButton) {
             currentTabButton.classList.add('active');
         }

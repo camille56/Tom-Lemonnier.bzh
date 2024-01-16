@@ -35,21 +35,21 @@ if (!empty($_GET['idEleve'])) {
     //Si un id est disponible dans les paramètres Get alors un élève a été selectionné dans le menu.
     $idEleve = $_GET['idEleve'];
 
-    $requeteEleve="select * from ca_eleve where id = ?";
-    $resultatEleve=$db->prepare($requeteEleve);
+    $requeteEleve = "select * from ca_eleve where id = ?";
+    $resultatEleve = $db->prepare($requeteEleve);
     $resultatEleve->execute([$idEleve]);
 
-    if ($eleve=$resultatEleve->fetch(PDO::FETCH_OBJ)){
-        $nom=$eleve->nom;
-        $prenom=$eleve->prenom;
-        $username=$eleve->username;
-        $password=$eleve->password;
-        $dateDeNaissance=$eleve->date_de_naissance;
-        $commentaire=$eleve->commentaire;
-        $statut=$eleve->statut;
-        $idAcces=$eleve->acces;
-        $dateDebutAcces=$eleve->date_debut_acces;
-        $dateFinAcces=$eleve->date_fin_acces;
+    if ($eleve = $resultatEleve->fetch(PDO::FETCH_OBJ)) {
+        $nom = $eleve->nom;
+        $prenom = $eleve->prenom;
+        $username = $eleve->username;
+        $password = $eleve->password;
+        $dateDeNaissance = $eleve->date_de_naissance;
+        $commentaire = $eleve->commentaire;
+        $statut = $eleve->statut;
+        $idAcces = $eleve->acces;
+        $dateDebutAcces = $eleve->date_debut_acces;
+        $dateFinAcces = $eleve->date_fin_acces;
 
     }
 
@@ -69,6 +69,15 @@ if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['username
     }
 }
 
+//Suppression d'un élève
+if (!empty($_POST['suppression']) && !empty($idEleve)) {
+    $requeteSupressionEleve = "delete from ca_eleve where id = ?";
+    $resultatSupressionEleve = $db->prepare($requeteSupressionEleve);
+    $resultatSupressionEleve->execute([$idEleve]);
+
+    header("Location: /administration/gestion_eleves.php");
+    die();
+}
 
 if ($formulaireComplet && !empty($idEleve)) {
     //Update d'un élève.
@@ -78,7 +87,7 @@ if ($formulaireComplet && !empty($idEleve)) {
     $resultatUpdateEleve = $db->prepare($requeteUpdateEleve);
     $resultatUpdateEleve->execute([$nom, $prenom, $username, $password, $dateDeNaissance, $commentaire, $statut, $idAcces, $dateDebutAcces, $dateFinAcces, $idEleve]);
 
-    header("Location: /administration/gestion_eleves.php?idEleve=".$idEleve);
+    header("Location: /administration/gestion_eleves.php?idEleve=" . $idEleve);
     die();
 
 } elseif ($formulaireComplet && empty($idEleve)) {
@@ -124,25 +133,31 @@ if ($formulaireComplet && !empty($idEleve)) {
 <div class="container">
     <form action="gestion_eleves.php" method="post">
         <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" value="<?= !empty($nom)? $nom : "" ?>" required>
+        <input type="text" id="nom" name="nom" value="<?= !empty($nom) ? $nom : "" ?>" required>
 
         <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" value="<?= !empty($prenom)? $prenom : "" ?>" required>
+        <input type="text" id="prenom" name="prenom" value="<?= !empty($prenom) ? $prenom : "" ?>" required>
 
         <label for="username">Username :</label>
-        <input type="text" id="username" name="username" value="<?= !empty($username)? $username : "" ?>" required>
+        <input type="text" id="username" name="username" value="<?= !empty($username) ? $username : "" ?>" required>
 
         <label for="password">Password :</label>
-        <input type="text" id="password" name="password" value="<?= !empty($password)? $password : "" ?>" required>
+        <input type="text" id="password" name="password" value="<?= !empty($password) ? $password : "" ?>" required>
 
         <label for="commentaire">Commentaire :</label>
         <textarea id="commentaire" name="commentaire"></textarea>
 
         <label for="date_de_naissance">Date de naissance :</label>
-        <input type="date" id="date_de_naissance" name="date_de_naissance" value="<?= !empty($dateDeNaissance)? $dateDeNaissance : "" ?>">
+        <input type="date" id="date_de_naissance" name="date_de_naissance"
+               value="<?= !empty($dateDeNaissance) ? $dateDeNaissance : "" ?>">
 
         <input type="hidden" name="idEleve" value="<?= $idEleve ?>">
-        <button type="submit"><?= !empty($idEleve)? "Modifier un Élève" : "Ajouter un Élève" ?></button>
+        <button type="submit"><?= !empty($idEleve) ? "Modifier un Élève" : "Ajouter un Élève" ?></button>
+    </form>
+    <form action="gestion_eleves.php" method="post">
+        <label for="suppression">Suppression de l'élève:</label>
+        <input type="hidden" name="idEleve" value="<?= $idEleve ?>">
+        <input type="submit" id="suppression" name="suppression" value="Suppression">
     </form>
 </div>
 
