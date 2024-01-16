@@ -44,7 +44,9 @@ if (!empty($_GET['idEleve'])) {
         $prenom = $eleve->prenom;
         $username = $eleve->username;
         $password = $eleve->password;
-        $dateDeNaissance = $eleve->date_de_naissance;
+        if ($eleve->date_naissance) {
+            $dateDeNaissance = $eleve->date_naissance;
+        }
         $commentaire = $eleve->commentaire;
         $statut = $eleve->statut;
         $idAcces = $eleve->acces;
@@ -125,6 +127,11 @@ if ($formulaireComplet && !empty($idEleve)) {
         $dateDebutAcces,
         $dateFinAcces
     ]);
+
+    $idEleve = $db->lastInsertId();
+
+    header("Location: /administration/gestion_eleves.php?idEleve=" . $idEleve);
+    die();
 }
 
 ?>
@@ -145,7 +152,7 @@ if ($formulaireComplet && !empty($idEleve)) {
         <input type="text" id="password" name="password" value="<?= !empty($password) ? $password : "" ?>" required>
 
         <label for="commentaire">Commentaire :</label>
-        <textarea id="commentaire" name="commentaire"></textarea>
+        <textarea id="commentaire" name="commentaire"><?= !empty($commentaire) ? $commentaire : "" ?></textarea>
 
         <label for="date_de_naissance">Date de naissance :</label>
         <input type="date" id="date_de_naissance" name="date_de_naissance"
