@@ -18,7 +18,7 @@ include_once "../include/configuration.php";
 <div id="tab2" class="content">
     <h2>Videos</h2>
     <div>
-        <a href="#">Création de vidéo</a>
+        <a href="/administration/gestion_videos.php">Création de vidéo</a>
     </div>
     <div>
         <a href="#">Création de catégories de vidéo</a>

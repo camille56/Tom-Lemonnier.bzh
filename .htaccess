@@ -1,2 +1,4 @@
+
+#Redirection du dossier administration vers la page de connexion à l'administration.
 RewriteEngine On
-RewriteRule ^administration$ /administration/connexion.php [L]
+RewriteRule ^administration/$ /administration/connexion.php [L,R=301]

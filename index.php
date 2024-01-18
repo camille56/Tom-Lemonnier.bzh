@@ -29,10 +29,6 @@ if (!isset($db)){
     <p>C'est une version plus évoluée de la page d'accueil. Ajoutez ici le contenu que vous souhaitez afficher.</p>
 </section>
 
-<footer>
-
-</footer>
-</body>
 <?php
 include_once "include/footer.php";
 ?>

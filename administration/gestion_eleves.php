@@ -61,13 +61,13 @@ if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['username
 
     $formulaireComplet = true;
 
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $commentaire = $_POST['commentaire'];
+    $nom = htmlspecialchars($_POST['nom']);
+    $prenom = htmlspecialchars($_POST['prenom']);
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+    $commentaire = htmlspecialchars($_POST['commentaire']);
     if (!empty($_POST['date_de_naissance'])) {
-        $dateDeNaissance = $_POST['date_de_naissance'];
+        $dateDeNaissance = htmlspecialchars($_POST['date_de_naissance']);
     }
 }
 
@@ -159,13 +159,15 @@ if ($formulaireComplet && !empty($idEleve)) {
                value="<?= !empty($dateDeNaissance) ? $dateDeNaissance : "" ?>">
 
         <input type="hidden" name="idEleve" value="<?= $idEleve ?>">
+        <br>
         <button type="submit"><?= !empty($idEleve) ? "Modifier un Élève" : "Ajouter un Élève" ?></button>
     </form>
     <form action="gestion_eleves.php" method="post">
         <label for="suppression">Suppression de l'élève:</label>
         <input type="hidden" name="idEleve" value="<?= $idEleve ?>">
-        <input type="submit" id="suppression" name="suppression" value="Suppression">
+        <button type="submit" id="suppression" name="suppression" value="1">Suppression</button>
     </form>
+    <br>
 </div>
 
 <?php
