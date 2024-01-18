@@ -63,3 +63,8 @@ CREATE TABLE `ca_video` (
                             `nombre_visionnage` varchar(255) NOT NULL,
                             `ordre` int NOT NULL
 );
+
+# 18/01/2024
+ALTER TABLE `ca_eleve`
+    ADD `telephone` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NULL AFTER `prenom`,
+    ADD `mail` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NULL AFTER `telephone`;

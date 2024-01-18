@@ -7,6 +7,14 @@ if (!isset($db)) {
 
 session_start();
 
+//Redirection Si l'utilisateur est déjà connecté.
+if (isset($_SESSION['statut'])) {
+    if ($_SESSION['statut'] === 2 || $_SESSION['statut'] === 3) {
+        header("Location: /administration/accueil.php");
+        die();
+    }
+}
+
 //définition des variables.
 $inputNom = "";
 $inputPassword = "";

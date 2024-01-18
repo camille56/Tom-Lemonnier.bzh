@@ -7,6 +7,7 @@ include_once "../include/configuration.php";
     <li class="tab" onclick="openTab('tab1')">Accueil</li>
     <li class="tab" onclick="openTab('tab2')">Videos</li>
     <li class="tab" onclick="openTab('tab3')">Elèves</li>
+    <li class="tab" id="Bouton_deconnexion" >Déconnexion</li>
 </ul>
 
 <div id="tab1" class="content">
@@ -31,7 +32,6 @@ include_once "../include/configuration.php";
     <div>
         <a href="/administration/gestion_eleves.php">Liste des élèves</a>
     </div>
-
 </div>
 
 
@@ -63,5 +63,25 @@ include_once "../include/configuration.php";
             currentTabButton.classList.add('active');
         }
     }
+
+    $(document).ready(function () {
+        // Attacher un gestionnaire de clic au bouton de déconnexion
+        $("#Bouton_deconnexion").on("click", function () {
+            // Appeler le fichier PHP via AJAX
+            $.ajax({
+                type: "POST",
+                url: "/administration/bin/ajax/deconnexion_admin.php",
+                success: function (data) {
+                    // Rediriger ou effectuer d'autres actions après la déconnexion
+                    window.location.href = "/index.php";
+                },
+                error: function (error) {
+                    // Gérer les erreurs si nécessaire
+                    console.error("Erreur lors de la déconnexion:", error);
+                }
+            });
+        });
+    });
+
 
 </script>
