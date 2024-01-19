@@ -22,7 +22,7 @@ include_once "../include/configuration.php";
         <a href="/administration/gestion_videos.php">Création de vidéo</a>
     </div>
     <div>
-        <a href="#">Création de catégories de vidéo</a>
+        <a href="/administration/gestion_types_video.php">Création de types de vidéo</a>
     </div>
 
 </div>
