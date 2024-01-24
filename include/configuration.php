@@ -1,7 +1,6 @@
 <?php
 
 include_once __DIR__."/../class/Database.php";
-include_once __DIR__."/fonctions.php";
 
 $localhost="";
 $dbname="";

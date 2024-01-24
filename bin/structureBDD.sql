@@ -68,3 +68,10 @@ CREATE TABLE `ca_video` (
 ALTER TABLE `ca_eleve`
     ADD `telephone` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NULL AFTER `prenom`,
     ADD `mail` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NULL AFTER `telephone`;
+
+# 24/01/2024
+ALTER TABLE `ca_video`
+    ADD `nom_fichier_video` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NOT NULL AFTER `nom`;
+
+ALTER TABLE `ca_video`
+    ADD `extension_fichier` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NOT NULL AFTER `nom_fichier_video`;

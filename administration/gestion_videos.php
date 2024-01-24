@@ -1,6 +1,7 @@
 <?php
 
 include_once "../include/configuration.php";
+include_once "../include/fonctions.php";
 
 session_start();
 if ($_SESSION['statut'] !== 2 && $_SESSION['statut'] !== 3) {
@@ -17,18 +18,31 @@ if (!isset($db)) {
     die();
 }
 
-$nom="";
-$type="";
-$dateCreation	="";
-$visibilite="";
-$nombreVisionnage="";
-$ordre="";
+$nom = "";
+$nomFichier = "";
+$extensionFichier = "";
+$idTypeVideo = "";
+$dateCreation = "";
+$visibilite = "";
+$nombreVisionnage = "";
+$ordre = "";
+
+$listeTypesVideo = array();
 
 $idVideo = !empty($_POST['idVideo']) ? $_POST['idVideo'] : "";
 $formulaireComplet = false;
 
+//Récupération des différents types de vidéo en BDD.
+$requeteTypeVideo = "select id, nom from ca_type_video";
+$resultatTypeVideo = $db->prepare($requeteTypeVideo);
+$resultatTypeVideo->execute();
+while ($typeVideo = $resultatTypeVideo->fetch(PDO::FETCH_OBJ)) {
+    $listeTypesVideo[] = $typeVideo;
+}
+
+//Si un id est disponible dans les paramètres Get alors une vidéo a été selectionnée dans le menu.
 if (!empty($_GET['idVideo'])) {
-    //Si un id est disponible dans les paramètres Get alors une vidéo a été selectionnée dans le menu.
+
     $idVideo = $_GET['idVideo'];
 
     $requeteEleve = "select * from ca_Video where id = ?";
@@ -37,96 +51,115 @@ if (!empty($_GET['idVideo'])) {
 
     if ($video = $resultatEleve->fetch(PDO::FETCH_OBJ)) {
         $nom = $video->nom;
-        $prenom = $video->prenom;
-        $username = $video->username;
-        $password = $video->password;
-        if ($video->date_naissance) {
-            $dateDeNaissance = $video->date_naissance;
-        }
-        $commentaire = $video->commentaire;
-        $statut = $video->statut;
-        $idAcces = $video->acces;
-        $dateDebutAcces = $video->date_debut_acces;
-        $dateFinAcces = $video->date_fin_acces;
+        $idTypeVideo = $video->type;
+        $dateCreation = $video->date_creation;
+        $visibilite = $video->visibilite;
+        $nombreVisionnage = $video->nombre_visionnage;
+        $ordre = $video->ordre;
 
     }
 
 }
 
-if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['username']) && !empty($_POST['password'])) {
+if (!empty($_POST['nom']) && !empty($_POST['type'])) {
 
     $formulaireComplet = true;
 
     $nom = htmlspecialchars($_POST['nom']);
-    $prenom = htmlspecialchars($_POST['prenom']);
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
-    $commentaire = htmlspecialchars($_POST['commentaire']);
-    if (!empty($_POST['date_de_naissance'])) {
-        $dateDeNaissance = htmlspecialchars($_POST['date_de_naissance']);
-    }
+    $idTypeVideo = $_POST['type'];
+    $visibilite = !empty($_POST['visibilite']) ? 1 : 0;
+
 }
 
 //Suppression d'une vidéo
 if (!empty($_POST['suppression']) && !empty($idVideo)) {
-    $requeteSupressionEleve = "delete from ca_eleve where id = ?";
+    $requeteSupressionEleve = "delete from ca_video where id = ?";
     $resultatSupressionEleve = $db->prepare($requeteSupressionEleve);
     $resultatSupressionEleve->execute([$idVideo]);
 
-    header("Location: /administration/gestion_eleves.php");
+    header("Location: /administration/gestion_videos.php");
     die();
 }
 
 if ($formulaireComplet && !empty($idVideo)) {
     //Update d'une vidéo.
 
-    $requeteUpdateEleve = "update ca_eleve set nom = ?, prenom = ?, username = ?, password= ?, date_naissance = ?, commentaire = ?,
-                            statut = ?, acces = ?, date_debut_acces= ?, date_fin_acces= ? where id = ?";
+    $requeteUpdateEleve = "update ca_video set nom = ?, type = ?, visibilite= ?, nombre_visionnage = ?, ordre = ? where id = ?";
     $resultatUpdateEleve = $db->prepare($requeteUpdateEleve);
-    $resultatUpdateEleve->execute([$nom, $prenom, $username, $password, $dateDeNaissance, $commentaire, $statut, $idAcces, $dateDebutAcces, $dateFinAcces, $idVideo]);
+    $resultatUpdateEleve->execute([$nom, $idTypeVideo, $visibilite, $nombreVisionnage, $ordre, $idVideo]);
 
-    header("Location: /administration/gestion_eleves.php?idVideo=" . $idVideo);
+    //gestion de la soumission d'une vidéo dans le formulaire.
+    if (!empty($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
+
+        if (preg_match('/\.(.+)$/', $_FILES['fichier']['name'], $matches)) {
+            $extensionFichier = $matches[1];
+        }
+
+        $etatSauvegarde = sauvegardeVideo($_FILES['fichier'], $idVideo);
+
+        //
+        if ($etatSauvegarde["saveOk"]) {
+            $nomFichier = $etatSauvegarde["nomDuFichier"];
+
+            $requeteUpdateNomVideo = "update ca_video set nom_fichier_video = ?, extension_fichier = ?  where id = ?";
+            $resultatUpdateNomVideo = $db->prepare($requeteUpdateNomVideo);
+            $resultatUpdateNomVideo->execute([$nomFichier, $extensionFichier, $idVideo]);
+        }
+
+    }
+
+    header("Location: /administration/gestion_videos.php?idVideo=" . $idVideo);
     die();
 
 } elseif ($formulaireComplet && empty($idVideo)) {
-    //create d'un vidéo.
+    //create d'une vidéo.
 
-    $dateInscription = date("Y-m-d");
-    $idAcces = 2;
+    $dateCreation = date("Y-m-d");
+    $idAcces = 2; //todo à revoir, ça vient d ou?
 
-    $requeteCreateEleve = "insert into ca_eleve (
+    //gestion de la soumission d'une vidéo dans le formulaire.
+    if (!empty($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
+
+        if (preg_match('/\.(.+)$/', $_FILES['fichier']['name'], $matches)) {
+            $extensionFichier = $matches[1];
+        }
+
+        $etatSauvegarde = sauvegardeVideo($_FILES['fichier']);
+
+        if ($etatSauvegarde["saveOk"]) {
+            $nomFichier = $etatSauvegarde["nomDuFichier"];
+
+        }
+
+    }
+
+    $requeteCreateVideo = "insert into ca_video (
                         nom,
-                        prenom,
-                        username,
-                        password,
-                        date_naissance,
-                        date_inscription,
-                        commentaire,
-                        statut,
-                        acces,
-                        date_debut_acces,
-                        date_fin_acces
+                      nom_fichier_video,
+                      extension_fichier,
+                        type,
+                        date_creation,
+                        visibilite,
+                        nombre_visionnage,
+                        ordre
                       ) values (
-                        ?,?,?,?,?,?,?,?,?,?,?
+                        ?,?,?,?,?,?,?,?
                                 )";
-    $resultatCreateEleve = $db->prepare($requeteCreateEleve);
+    $resultatCreateEleve = $db->prepare($requeteCreateVideo);
     $resultatCreateEleve->execute([
         $nom,
-        $prenom,
-        $username,
-        $password,
-        $dateDeNaissance,
-        $dateInscription,
-        $commentaire,
-        $statut,
-        $idAcces,
-        $dateDebutAcces,
-        $dateFinAcces
+        $nomFichier,
+        $extensionFichier,
+        $idTypeVideo,
+        $dateCreation,
+        $visibilite,
+        $nombreVisionnage,
+        $ordre
     ]);
 
     $idVideo = $db->lastInsertId();
 
-    header("Location: /administration/gestion_eleves.php?idVideo=" . $idVideo);
+    header("Location: /administration/gestion_videos.php?idVideo=" . $idVideo);
     die();
 }
 
@@ -134,13 +167,22 @@ if ($formulaireComplet && !empty($idVideo)) {
 
 
 <div class="container">
-    <form action="gestion_eleves.php" method="post">
+    <form action="gestion_videos.php" method="post" enctype="multipart/form-data">
         <label for="nom">Nom :</label>
         <input type="text" id="nom" name="nom" value="<?= !empty($nom) ? $nom : "" ?>" required>
 
         <label for="type">Type :</label>
         <select id="type" name="type" required>
             <option value="">Choisissez un type de vidéo</option>
+            <?php
+            foreach ($listeTypesVideo as $typeVideo) {
+                ?>
+                <option value="<?= $typeVideo->id ?>" <?php if ($typeVideo->id == $idTypeVideo) {
+                    echo "selected";
+                } ?> ><?= $typeVideo->nom ?></option>
+                <?php
+            }
+            ?>
         </select>
 
         <label for="fichier">Sélectionnez un fichier :</label>
@@ -148,7 +190,9 @@ if ($formulaireComplet && !empty($idVideo)) {
 
 
         <label for="visibilite">La Vidéo est visible par les élèves : :</label>
-        <input type="checkbox" id="visibilite" name="visibilite" value="<?= !empty($nom) ? $nom : "" ?>" required>
+        <input type="checkbox" id="visibilite" name="visibilite" <?php if ($visibilite == 1) {
+            echo "checked";
+        } ?> value="<?= !empty($nom) ? $nom : "" ?>">
 
 
         <input type="hidden" name="idVideo" value="<?= $idVideo ?>">
@@ -167,15 +211,3 @@ if ($formulaireComplet && !empty($idVideo)) {
 include_once "../include/footer.php";
 ?>
 
-<?php
-
-/**Sauvegarde un fichier vidéo sur le serveur pour un id de vidéo.
- * Efface et remplace un fichier vidéo s'il est déjà existant pour cet id.
- *
- * @return void
- */
-function sauvegardeVideo()
-{
-    
-}
-?>
