@@ -75,6 +75,9 @@ if (!empty($_POST['nom']) && !empty($_POST['type'])) {
 
 //Suppression d'une vidéo
 if (!empty($_POST['suppression']) && !empty($idVideo)) {
+
+    supprimeVideoDuServer($idVideo);
+
     $requeteSupressionEleve = "delete from ca_video where id = ?";
     $resultatSupressionEleve = $db->prepare($requeteSupressionEleve);
     $resultatSupressionEleve->execute([$idVideo]);

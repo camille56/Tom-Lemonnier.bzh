@@ -56,22 +56,7 @@ function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
 
     //Si un paramètre $idVideo est présent, on doit effacer l'ancienne vidéo présente sur le serveur.
     if (!empty($idVideo)) {
-        $nomVideoAEffacer = "";
-        $requete = "select nom_fichier_video from ca_video where id = ?";
-        $resultat = $db->prepare($requete);
-        $resultat->execute([$idVideo]);
-
-        if ($video = $resultat->fetch(PDO::FETCH_OBJ)) {
-            $nomVideoAEffacer = $video->nom_fichier_video;
-        }
-        if (!empty($nomVideoAEffacer)) {
-
-            $chemin_fichier = __DIR__ . "/../fichiers/videos/" . $nomVideoAEffacer;
-
-            //Unlink pour supprimer le fichier
-            unlink($chemin_fichier);
-
-        }
+        supprimeVideoDuServer($idVideo);
     }
 
     $cheminDossier = __DIR__ . "/../fichiers/videos";
@@ -120,5 +105,40 @@ function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
 
     return $enregistrement;
 
+}
+
+/**
+ * Supprime une vidéo du server en fonction de l'id de la vidéo.
+ * @param $idVideo
+ * @return void
+ */
+function supprimeVideoDuServer($idVideo): void
+{
+    global $db;
+
+    $nomVideoAEffacer = "";
+    $requete = "select nom_fichier_video from ca_video where id = ?";
+    $resultat = $db->prepare($requete);
+    $resultat->execute([$idVideo]);
+
+    if ($video = $resultat->fetch(PDO::FETCH_OBJ)) {
+        $nomVideoAEffacer = $video->nom_fichier_video;
+    }
+    if (!empty($nomVideoAEffacer)) {
+
+        $chemin_fichier = __DIR__ . "/../fichiers/videos/" . $nomVideoAEffacer;
+
+        //Unlink pour supprimer le fichier
+        if (file_exists($chemin_fichier)) {
+            if (unlink($chemin_fichier)) {
+                echo "Suppression réussie.";
+            } else {
+                echo "Échec de la suppression. Erreur : " . error_get_last()['message'];
+            }
+        } else {
+            echo "Le fichier n'existe pas : $chemin_fichier";
+        }
+
+    }
 }
 
