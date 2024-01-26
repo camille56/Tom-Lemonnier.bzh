@@ -97,7 +97,7 @@ if ($formulaireComplet && !empty($idTypeVideo)) {
         <button type="submit"><?= !empty($idTypeVideo) ? "Modifier un type de Vidéo" : "Ajouter un type de Vidéo" ?></button>
 
     </form>
-    <form action="gestion_types_video.php" method="post">
+    <form action="gestion_types_video.php" method="post" onsubmit="return confirmSuppression();">
         <label for="suppression">Suppression du type de la vidéo:</label>
         <input type="hidden" name="idTypeVideo" value="<?= $idTypeVideo ?>">
         <button type="submit" id="suppression" name="suppression" value="1">Suppression</button>
@@ -108,3 +108,9 @@ if ($formulaireComplet && !empty($idTypeVideo)) {
 <?php
 include_once "../include/footer.php";
 ?>
+
+<script>
+    function confirmSuppression() {
+        return confirm("Êtes-vous sûr de vouloir supprimer ce type de vidéo?");
+    }
+</script>

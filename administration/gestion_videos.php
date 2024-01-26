@@ -167,7 +167,7 @@ if ($formulaireComplet && !empty($idVideo)) {
 }
 
 ?>
-
+<?php //todo faire un message d'erreur et un message de confirmation pour afficher en vert ou rouge ?>
 <div id="messageConfirmation" <?php if (!isset($_SESSION['messageConfirmation'])) {
     echo "style='display: none;'";
 } ?>>
@@ -178,7 +178,6 @@ if ($formulaireComplet && !empty($idVideo)) {
     }
     ?>
 </div>
-
 
 
 <div class="container">
@@ -214,7 +213,7 @@ if ($formulaireComplet && !empty($idVideo)) {
         <br>
         <button type="submit"><?= !empty($idVideo) ? "Modifier une Vidéo" : "Ajouter une Vidéo" ?></button>
     </form>
-    <form action="gestion_videos.php" method="post">
+    <form action="gestion_videos.php" method="post" onsubmit="return confirmSuppression();">
         <label for="suppression">Suppression de la vidéo:</label>
         <input type="hidden" name="idVideo" value="<?= $idVideo ?>">
         <button type="submit" id="suppression" name="suppression" value="1">Suppression</button>
@@ -225,4 +224,10 @@ if ($formulaireComplet && !empty($idVideo)) {
 <?php
 include_once "../include/footer.php";
 ?>
+
+<script>
+    function confirmSuppression() {
+        return confirm("Êtes-vous sûr de vouloir supprimer cette vidéo?");
+    }
+</script>
 

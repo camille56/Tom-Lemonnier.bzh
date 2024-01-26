@@ -162,7 +162,7 @@ if ($formulaireComplet && !empty($idEleve)) {
         <br>
         <button type="submit"><?= !empty($idEleve) ? "Modifier un Élève" : "Ajouter un Élève" ?></button>
     </form>
-    <form action="gestion_eleves.php" method="post">
+    <form action="gestion_eleves.php" method="post" onsubmit="return confirmSuppression();">
         <label for="suppression">Suppression de l'élève:</label>
         <input type="hidden" name="idEleve" value="<?= $idEleve ?>">
         <button type="submit" id="suppression" name="suppression" value="1">Suppression</button>
@@ -173,3 +173,9 @@ if ($formulaireComplet && !empty($idEleve)) {
 <?php
 include_once "../include/footer.php";
 ?>
+
+<script>
+    function confirmSuppression() {
+        return confirm("Êtes-vous sûr de vouloir supprimer cet élève?");
+    }
+</script>

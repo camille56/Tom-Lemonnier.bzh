@@ -67,19 +67,21 @@ include_once "../include/configuration.php";
     $(document).ready(function () {
         // Attacher un gestionnaire de clic au bouton de déconnexion
         $("#Bouton_deconnexion").on("click", function () {
-            // Appeler le fichier PHP via AJAX
-            $.ajax({
-                type: "POST",
-                url: "/administration/bin/ajax/deconnexion_admin.php",
-                success: function (data) {
-                    // Rediriger ou effectuer d'autres actions après la déconnexion
-                    window.location.href = "/index.php";
-                },
-                error: function (error) {
-                    // Gérer les erreurs si nécessaire
-                    console.error("Erreur lors de la déconnexion:", error);
-                }
-            });
+            if (confirm("Êtes-vous sûr de vouloir vous déconnecter?")) {
+                // Appeler le fichier PHP via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/administration/bin/ajax/deconnexion_admin.php",
+                    success: function (data) {
+                        // Rediriger ou effectuer d'autres actions après la déconnexion
+                        window.location.href = "/index.php";
+                    },
+                    error: function (error) {
+                        // Gérer les erreurs si nécessaire
+                        console.error("Erreur lors de la déconnexion:", error);
+                    }
+                });
+            }
         });
     });
 
