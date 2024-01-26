@@ -175,3 +175,13 @@ button {
 .menu a:hover {
     color: #777777; /* Couleur du texte des liens au survol */
 }
+
+
+#messageConfirmation {
+    background-color: #4CAF50; /* Couleur de fond verte */
+    color: white; /* Couleur du texte blanc */
+    padding: 10px; /* Espacement intérieur */
+    margin-top: 10px; /* Marge supérieure */
+    border-radius: 5px; /* Coins arrondis */
+    text-align: center; /* Alignement du texte au centre */
+}

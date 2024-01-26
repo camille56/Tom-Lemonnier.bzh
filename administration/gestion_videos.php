@@ -18,6 +18,7 @@ if (!isset($db)) {
     die();
 }
 
+
 $nom = "";
 $nomFichier = "";
 $extensionFichier = "";
@@ -26,6 +27,7 @@ $dateCreation = "";
 $visibilite = "";
 $nombreVisionnage = "";
 $ordre = "";
+
 
 $listeTypesVideo = array();
 
@@ -97,14 +99,15 @@ if ($formulaireComplet && !empty($idVideo)) {
 
         $etatSauvegarde = sauvegardeVideo($_FILES['fichier'], $idVideo);
 
-        //
         if ($etatSauvegarde["saveOk"]) {
             $nomFichier = $etatSauvegarde["nomDuFichier"];
 
             $requeteUpdateNomVideo = "update ca_video set nom_fichier_video = ?, extension_fichier = ?  where id = ?";
             $resultatUpdateNomVideo = $db->prepare($requeteUpdateNomVideo);
             $resultatUpdateNomVideo->execute([$nomFichier, $extensionFichier, $idVideo]);
+
         }
+        $_SESSION['messageConfirmation'] = $etatSauvegarde['message'];
 
     }
 
@@ -128,8 +131,8 @@ if ($formulaireComplet && !empty($idVideo)) {
 
         if ($etatSauvegarde["saveOk"]) {
             $nomFichier = $etatSauvegarde["nomDuFichier"];
-
         }
+        $_SESSION['messageConfirmation'] = $etatSauvegarde['message'];
 
     }
 
@@ -164,6 +167,18 @@ if ($formulaireComplet && !empty($idVideo)) {
 }
 
 ?>
+
+<div id="messageConfirmation" <?php if (!isset($_SESSION['messageConfirmation'])) {
+    echo "style='display: none;'";
+} ?>>
+    <?php
+    if (isset($_SESSION['messageConfirmation'])) {
+        echo $_SESSION['messageConfirmation'];
+        unset($_SESSION['messageConfirmation']);
+    }
+    ?>
+</div>
+
 
 
 <div class="container">
