@@ -93,8 +93,9 @@ h2 {
 
 /*PAGE GESTION_ELEVES*/
 body {
-    background-color: #04151F;
+    /*background-color: #04151F;*/
     color: #777777;
+    background-color: whitesmoke;
     font-family: Arial, sans-serif;
 }
 

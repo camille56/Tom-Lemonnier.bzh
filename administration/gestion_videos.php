@@ -25,6 +25,7 @@ $extensionFichier = "";
 $idTypeVideo = "";
 $dateCreation = "";
 $visibilite = "";
+$commentaire = "";
 $nombreVisionnage = "";
 $ordre = "";
 
@@ -56,13 +57,14 @@ if (!empty($_GET['idVideo'])) {
         $idTypeVideo = $video->type;
         $dateCreation = $video->date_creation;
         $visibilite = $video->visibilite;
+        $commentaire = $video->commentaire;
         $nombreVisionnage = $video->nombre_visionnage;
         $ordre = $video->ordre;
-
     }
 
 }
 
+//Récupération des informations du formulaire.
 if (!empty($_POST['nom']) && !empty($_POST['type'])) {
 
     $formulaireComplet = true;
@@ -70,6 +72,7 @@ if (!empty($_POST['nom']) && !empty($_POST['type'])) {
     $nom = htmlspecialchars($_POST['nom']);
     $idTypeVideo = $_POST['type'];
     $visibilite = !empty($_POST['visibilite']) ? 1 : 0;
+    $commentaire = htmlspecialchars($_POST['commentaireVideo']);
 
 }
 
@@ -89,9 +92,9 @@ if (!empty($_POST['suppression']) && !empty($idVideo)) {
 if ($formulaireComplet && !empty($idVideo)) {
     //Update d'une vidéo.
 
-    $requeteUpdateEleve = "update ca_video set nom = ?, type = ?, visibilite= ?, nombre_visionnage = ?, ordre = ? where id = ?";
+    $requeteUpdateEleve = "update ca_video set nom = ?, type = ?, visibilite= ?, commentaire= ? , nombre_visionnage = ?, ordre = ? where id = ?";
     $resultatUpdateEleve = $db->prepare($requeteUpdateEleve);
-    $resultatUpdateEleve->execute([$nom, $idTypeVideo, $visibilite, $nombreVisionnage, $ordre, $idVideo]);
+    $resultatUpdateEleve->execute([$nom, $idTypeVideo, $visibilite, $commentaire, $nombreVisionnage, $ordre, $idVideo]);
 
     //gestion de la soumission d'une vidéo dans le formulaire.
     if (!empty($_FILES['fichier']) && $_FILES['fichier']['error'] == 0) {
@@ -146,10 +149,11 @@ if ($formulaireComplet && !empty($idVideo)) {
                         type,
                         date_creation,
                         visibilite,
+                        commentaire,
                         nombre_visionnage,
                         ordre
                       ) values (
-                        ?,?,?,?,?,?,?,?
+                        ?,?,?,?,?,?,?,?,?
                                 )";
     $resultatCreateEleve = $db->prepare($requeteCreateVideo);
     $resultatCreateEleve->execute([
@@ -159,6 +163,7 @@ if ($formulaireComplet && !empty($idVideo)) {
         $idTypeVideo,
         $dateCreation,
         $visibilite,
+        $commentaire,
         $nombreVisionnage,
         $ordre
     ]);
@@ -211,6 +216,9 @@ if ($formulaireComplet && !empty($idVideo)) {
             echo "checked";
         } ?> value="<?= !empty($nom) ? $nom : "" ?>">
 
+        <label for="commentaireVideo">Commentaire :</label>
+        <textarea id="commentaireVideo"
+                  name="commentaireVideo"><?= !empty($commentaire) ? $commentaire : "" ?></textarea>
 
         <input type="hidden" name="idVideo" value="<?= $idVideo ?>">
         <br>

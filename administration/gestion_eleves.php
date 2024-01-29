@@ -23,7 +23,7 @@ $password = "";
 $dateDeNaissance = "";
 $dateInscription = "";
 $commentaire = "";
-$statut = "";
+$statut = 5; //par défault le statut est 5, celui d'un élève.
 $idAcces = "";
 $dateDebutAcces = "";
 $dateFinAcces = "";
@@ -65,7 +65,7 @@ if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['username
     $prenom = htmlspecialchars($_POST['prenom']);
     $username = htmlspecialchars($_POST['username']);
     $password = htmlspecialchars($_POST['password']);
-    $commentaire = htmlspecialchars($_POST['commentaire']);
+    $commentaire = htmlspecialchars($_POST['commentaireEleve']);
     if (!empty($_POST['date_de_naissance'])) {
         $dateDeNaissance = htmlspecialchars($_POST['date_de_naissance']);
     }
@@ -151,8 +151,8 @@ if ($formulaireComplet && !empty($idEleve)) {
         <label for="password">Password :</label>
         <input type="text" id="password" name="password" value="<?= !empty($password) ? $password : "" ?>" required>
 
-        <label for="commentaire">Commentaire :</label>
-        <textarea id="commentaire" name="commentaire"><?= !empty($commentaire) ? $commentaire : "" ?></textarea>
+        <label for="commentaireEleve">Commentaire :</label>
+        <textarea id="commentaireEleve" name="commentaireEleve"><?= !empty($commentaire) ? $commentaire : "" ?></textarea>
 
         <label for="date_de_naissance">Date de naissance :</label>
         <input type="date" id="date_de_naissance" name="date_de_naissance"

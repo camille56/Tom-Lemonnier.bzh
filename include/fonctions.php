@@ -79,7 +79,7 @@ function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
     }
 
     // Autoriser certains formats de fichier vidéo.
-    $formatAutorises = ["mp4", "avi", "mov", "video/mp4","video/avi","video/mov"];
+    $formatAutorises = ["mp4", "avi", "mov", "video/mp4", "video/avi", "video/mov"];
     if (!in_array($typeFichier, $formatAutorises)) {
         $messageErreur = "Seuls les fichiers de type " . implode(", ", $formatAutorises) . " sont autorisés.";
         $uploadOk = false;

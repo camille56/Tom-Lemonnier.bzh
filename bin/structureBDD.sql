@@ -75,3 +75,10 @@ ALTER TABLE `ca_video`
 
 ALTER TABLE `ca_video`
     ADD `extension_fichier` varchar(255) COLLATE 'utf8mb4_0900_ai_ci' NOT NULL AFTER `nom_fichier_video`;
+
+# 29/01/2024
+INSERT INTO `ca_statut` (`nom`)
+VALUES ('élève');
+
+ALTER TABLE `ca_video`
+    ADD `commentaire` text NOT NULL AFTER `visibilite`;

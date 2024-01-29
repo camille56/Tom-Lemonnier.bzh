@@ -33,7 +33,8 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
     $requeteStatut = "select * from ca_utilisateur where nom = ?";
     $resultatStatut = $db->prepare($requeteStatut);
     $resultatStatut->execute([$inputNom]);
-    while ($statut = $resultatStatut->fetch(PDO::FETCH_OBJ)) {
+    if ($statut = $resultatStatut->fetch(PDO::FETCH_OBJ)) {
+
         $statutUtilisateur = $statut->statut;
         $nomUtilisateur = $statut->nom;
         $passwordUtilisateur = $statut->password;
@@ -47,6 +48,8 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
             $messageConnexion = "Il doit y avoir une erreur d'identifiant ou de mot de passe.";
         }
 
+    } else {
+        $messageConnexion = "Il doit y avoir une erreur d'identifiant ou de mot de passe.";
     }
 
 }
