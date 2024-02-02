@@ -50,7 +50,7 @@ while ($video = $resultatVideo->fetch(PDO::FETCH_OBJ)) {
                     foreach ($listeVideos as $video) {
                         if ($video->type === $typeVideo->id) {
                             ?>
-                            <li class="video-item"><a href="detailVideo.php"><?= $video->nom ?></a></li>
+                            <li class="video-item"><a href="detailVideo.php?id=<?= $video->id ?>"><?= $video->nom ?></a></li>
                             <?php
                         }
                     }

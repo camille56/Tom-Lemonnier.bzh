@@ -49,6 +49,7 @@ function genererStringAleatoire($nbLettres, $nbChiffres): string
 function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
 {
     global $db;
+    $extension="";
     $messageErreur = "";
     $messageValidation = "";
     $uploadOk = true;
@@ -69,8 +70,11 @@ function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
     $typeFichier = $fichierVideo['type'];
     $tailleFichier = $fichierVideo["size"];
     $nomTemporaireFichier = $fichierVideo["tmp_name"];
+    if (preg_match('/\.([a-zA-Z0-9]+)$/', $fichierVideo['name'], $matches)) {
+        $extension = $matches[1];
+    }
 
-    $cheminFichier = $cheminDossier . '/' . $nomFichier;
+    $cheminFichier = $cheminDossier . '/' . $nomFichier.'.'.$extension;
 
     // Vérifier la taille du fichier (ici, limite à 100 Mo)
     if ($tailleFichier > 100000000) {
@@ -98,9 +102,9 @@ function sauvegardeVideo($fichierVideo, string $idVideo = ""): array
     }
 
     if ($uploadOk) {
-        $enregistrement = ["nomDuFichier" => $nomFichier, "saveOk" => true, "message" => $messageValidation];
+        $enregistrement = ["nomDuFichier" => $nomFichier.'.'.$extension, "saveOk" => true, "message" => $messageValidation];
     } else {
-        $enregistrement = ["nomDuFichier" => $nomFichier, "saveOk" => false, "message" => $messageErreur];
+        $enregistrement = ["nomDuFichier" => $nomFichier.'.'.$extension, "saveOk" => false, "message" => $messageErreur];
     }
 
     return $enregistrement;

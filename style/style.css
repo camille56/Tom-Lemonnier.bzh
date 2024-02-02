@@ -55,9 +55,21 @@ form {
     text-align: center;
 }
 
-.form_content{
+.form_content {
     margin: auto;
 }
+
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
 
 /*ADMINSITRATION*/
 .tabs {
@@ -124,14 +136,14 @@ input {
     margin-bottom: 16px;
 }
 
-select{
+select {
     width: 100%;
     max-width: 600px;
     padding: 8px;
     margin-bottom: 16px;
 }
 
-textarea{
+textarea {
     height: 200px;
     width: 600px;
 }
@@ -185,4 +197,9 @@ button {
     margin-top: 10px; /* Marge supérieure */
     border-radius: 5px; /* Coins arrondis */
     text-align: center; /* Alignement du texte au centre */
+}
+
+/*accès étutiant*/
+ul {
+    list-style-type: none;
 }
