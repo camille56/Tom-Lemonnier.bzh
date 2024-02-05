@@ -39,11 +39,10 @@ if (!empty($_POST['username']) && !empty($_POST['password'])) {
     }
 
 }
-
+include_once "include/menu.php";
 ?>
 
     <div class="login-container">
-        <h2>Connexion</h2>
         <form id="loginForm" action="connexion.php" method="post">
             <label for="username">Nom d'utilisateur :</label>
             <input type="text" id="username" name="username" required>

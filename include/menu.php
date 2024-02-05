@@ -23,4 +23,32 @@ if (!isset($db)) {
     <?php } else { ?>
         <a href="../connexion.php">Accès étudiant</a>
     <?php } ?>
+    <?php if (!empty($_SESSION['statut_etudiant'])){
+        ?>
+        <button id="Bouton_deconnexion">Déconnexion</button>
+        <?php
+    } ?>
 </nav>
+
+<script>
+    $(document).ready(function () {
+        // Attacher un gestionnaire de clic au bouton de déconnexion
+        $("#Bouton_deconnexion").on("click", function () {
+            if (confirm("Êtes-vous sûr de vouloir vous déconnecter?")) {
+                // Appeler le fichier PHP via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/bin/ajax/deconnexion_etudiant.php",
+                    success: function (data) {
+                        // Rediriger ou effectuer d'autres actions après la déconnexion
+                        window.location.href = "/index.php";
+                    },
+                    error: function (error) {
+                        // Gérer les erreurs si nécessaire
+                        console.error("Erreur lors de la déconnexion:", error);
+                    }
+                });
+            }
+        });
+    });
+</script>
