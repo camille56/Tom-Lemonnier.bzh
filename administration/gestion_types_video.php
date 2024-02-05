@@ -18,6 +18,7 @@ if (!isset($db)) {
 }
 
 $nom = "";
+$commentaire="";
 
 $idTypeVideo = !empty($_POST['idTypeVideo']) ? $_POST['idTypeVideo'] : "";
 $formulaireComplet = false;
@@ -32,14 +33,16 @@ if (!empty($_GET['idTypeVideo'])) {
 
     if ($typeVideo = $resultatEleve->fetch(PDO::FETCH_OBJ)) {
         $nom = $typeVideo->nom;
+        $commentaire= $typeVideo->commentaire;
     }
 
 }
 
-if (!empty($_POST['nom'])) {
+if (isset($_POST['nom']) && isset($_POST['commentaire'])) {
 
     $formulaireComplet = true;
     $nom = htmlspecialchars($_POST['nom']);
+    $commentaire = htmlspecialchars($_POST['commentaire']);
 
 }
 
@@ -56,9 +59,9 @@ if (!empty($_POST['suppression']) && !empty($idTypeVideo)) {
 if ($formulaireComplet && !empty($idTypeVideo)) {
     //Update d'un type de vidéo.
 
-    $requeteUpdateEleve = "update ca_eleve set nom = ? where id = ?";
+    $requeteUpdateEleve = "update ca_type_video set nom = ?, commentaire = ? where id = ?";
     $resultatUpdateEleve = $db->prepare($requeteUpdateEleve);
-    $resultatUpdateEleve->execute([$nom]);
+    $resultatUpdateEleve->execute([$nom,$commentaire,$idTypeVideo]);
 
     header("Location: /administration/gestion_types_video.php?idTypeVideo=" . $idTypeVideo);
     die();
@@ -70,12 +73,14 @@ if ($formulaireComplet && !empty($idTypeVideo)) {
     $idAcces = 2;
 
     $requeteCreateEleve = "insert into ca_type_video (
-                        nom
-                      ) values (?
+                        nom,
+                        commentaire
+                      ) values (?,?
                                 )";
     $resultatCreateEleve = $db->prepare($requeteCreateEleve);
     $resultatCreateEleve->execute([
         $nom,
+        $commentaire,
     ]);
 
     $idTypeVideo = $db->lastInsertId();
@@ -91,6 +96,10 @@ if ($formulaireComplet && !empty($idTypeVideo)) {
     <form action="gestion_types_video.php" method="post">
         <label for="nom">Nom :</label>
         <input type="text" id="nom" name="nom" value="<?= !empty($nom) ? $nom : "" ?>" required>
+
+        <label for="commentaire">Commentaire :</label>
+        <textarea id="commentaire"
+                  name="commentaire"><?= !empty($commentaire) ? $commentaire : "" ?></textarea>
 
         <input type="hidden" name="idTypeVideo" value="<?= $idTypeVideo ?>">
         <br>

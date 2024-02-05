@@ -82,3 +82,7 @@ VALUES ('élève');
 
 ALTER TABLE `ca_video`
     ADD `commentaire` text NOT NULL AFTER `visibilite`;
+
+# 05/02/2024
+ALTER TABLE `ca_type_video`
+    ADD `commentaire` text COLLATE 'utf8mb4_0900_ai_ci' NOT NULL;

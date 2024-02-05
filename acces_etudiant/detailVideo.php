@@ -19,7 +19,7 @@ $idVideo = "";
 if (isset($_GET['id'])) {
     $idVideo = $_GET['id'];
 }
-$requeteVideo = "select * from ca_video where id = ?";
+$requeteVideo = "select * from ca_video where id = ? and ca_video.visibilite = 1";
 $resultatVideo = $db->prepare($requeteVideo);
 $resultatVideo->execute([$idVideo]);
 if ($video = $resultatVideo->fetch(PDO::FETCH_OBJ)) {
